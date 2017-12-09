@@ -41,7 +41,7 @@ def tradfri_get_devices(hubip, securityid):
         sys.stderr.write('[-] libcoap: could not find libcoap.\n')
         sys.exit(1)
 
-    return json.loads(result.read().strip('\n'))
+    return loadJson(result)
 
 def tradfri_get_lightbulb(hubip, securityid, deviceid):
     """ function for getting tradfri lightbulb information """
@@ -55,7 +55,7 @@ def tradfri_get_lightbulb(hubip, securityid, deviceid):
         sys.stderr.write('[-] libcoap: could not find libcoap.\n')
         sys.exit(1)
 
-    return json.loads(result.read().strip('\n'))
+    return loadJson(result)
 
 def tradfri_get_groups(hubip, securityid):
     """ function for getting tradfri groups """
@@ -68,8 +68,8 @@ def tradfri_get_groups(hubip, securityid):
     else:
         sys.stderr.write('[-] libcoap: could not find libcoap.\n')
         sys.exit(1)
-
-    return json.loads(result.read().strip('\n'))
+    
+    return loadJson(result)
 
 def tradfri_get_group(hubip, securityid, groupid):
     """ function for getting tradfri group information """
@@ -83,4 +83,12 @@ def tradfri_get_group(hubip, securityid, groupid):
         sys.stderr.write('[-] libcoap: could not find libcoap.\n')
         sys.exit(1)
 
-    return json.loads(result.read().strip('\n'))
+    return loadJson(result)
+
+def loadJson(result):
+    jsonString = result.read().strip('\n')
+    try:
+        return json.loads(jsonString)
+    except ValueError as err:
+        print("Unexpected result (not JSON): '{0}'".format(jsonString))
+        raise err
